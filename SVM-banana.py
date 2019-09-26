@@ -70,3 +70,22 @@ plt.plot(features[:,0][targets == 1],features[:,1][targets == 1], 's', color = '
 plt.plot(features[:,0][targets == 2],features[:,1][targets == 2], 's', color = 'r')
 plt.xlabel('feature 1')
 plt.ylabel('feature 2')
+
+# Alternatively, GridSearchCV is a good method to find the parameters with the best accuracy score
+from sklearn.model_selection import GridSearchCV
+SVC_model = SVC()
+param_range = np.logspace(-3, 3, 7)
+print(SVC_model.get_params().keys()) # Parameters that could be tuned
+param_grid = [{'C':param_range,
+	       'kernel':['linear'],
+	       'gamma':param_range},
+	       {'C':param_range,
+	       'kernel':['rbf'],
+	       'gamma':param_range}]
+gs = GridSearchCV(estimator = SVC_model,
+		 param_grid = param_grid,
+		 scoring = 'accuracy',
+		 cv = 5,
+		 n_jobs = -1)
+gs = gs.fit(X_train, Y_train)
+print(f'The best parameters are {gs.best_params_} with the accuracy score of {gs.best_score_}')
